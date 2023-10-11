@@ -15,9 +15,27 @@
 
     </head>
     <body>
+        <script>
+            function play_start(){
+                $.post("/open_api/play_movie", { "data":"somedata", "any":"data"},
+                    function(data, textStatus) {
+                        //this gets called when browser receives response from server
+                        console.log(data);
+                    }, "json").fail( function(response) {
+                        //this gets called if the server throws an error
+                        console.log("error");
+                    console.log(response);});
+            }
+        </script>
+        <script>
+            video.addEventListener("play", (event) => {
+                play_start();
+            });
+        </script>
         <h1 style="font-size:10a">FOOD FOR THOUGHT</h1>
         <p>
             <iframe width="560" height="315" src="https://www.youtube.com/embed/ogV2r9579WI?si=QC8_lwyNTJAJbZK3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <br><a href="https://docs.google.com/forms/d/1Edz9p7WSCZ8bw1RFtig_lenHAiIZF1XT5YY5YXDwidE/edit?pli=1">Interested? Fill in the survey!</a></br>
         </p>
 
     </body>
