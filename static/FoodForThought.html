@@ -13,8 +13,19 @@
         <link rel="stylesheet" type="text/css" href="style.css">
         <meta charset="utf-8" />
 
+        
     </head>
     <body>
+        <style>
+            .center {
+              text-align: center;
+            }
+        </style>
+
+        <div class="center">
+            <p><h1 style="font-size:10a">FOOD FOR THOUGHT</h1></p></b>
+        </div>
+
         <script>
             function play_start(){
                 $.post("/open_api/play_movie", { "data":"somedata", "any":"data"},
@@ -28,20 +39,29 @@
             }
         </script>
 
+        <video id="video" width="320" height="240" controls>
+            <source src="movie.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
         <script>
             video.addEventListener("play", (event) => {
                 play_start();
             });
         </script>
-        <h1 style="font-size:10a">FOOD FOR THOUGHT</h1>
         <p>
             <!--<iframe width="560" height="315" src="https://www.youtube.com/embed/ogV2r9579WI?si=QC8_lwyNTJAJbZK3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>-->
-            <video id="video" width="320" height="240" controls>
-                <source src="movie.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-            </video>
+            
             <br><a href="https://docs.google.com/forms/d/1Edz9p7WSCZ8bw1RFtig_lenHAiIZF1XT5YY5YXDwidE/edit?pli=1">Interested? Fill in the survey to find a potential connection!</a></br>
-            <h2 style="font-size:10z">Interested? Fill the survey below to find a potential connection! :)</h2>
+            <style>
+                .center {
+                  text-align: center;
+                }
+            </style>
+    
+            <div class="center">
+                <p><h2 style="font-size:10z">Interested? Fill the survey below to find a potential connection! :)</h2></p></b>
+            </div>
             <br><button onclick=window.location.href="https://docs.google.com/forms/d/1Edz9p7WSCZ8bw1RFtig_lenHAiIZF1XT5YY5YXDwidE/edit?pli=1">
                 Interested? Fill in the survey to find a potential connection!
               </button></br>
