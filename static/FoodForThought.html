@@ -14,7 +14,7 @@
         <meta charset="utf-8" />
         <style>
             body {
-              font-family: Georgia;
+              font-family: 'Merriweather';
             }
             </style>
         
@@ -29,10 +29,18 @@
         <div class="center">
             <p><h1 style="font-size:10a">FOOD FOR THOUGHT</h1></p></b>
 
-        <p>Want to find a connection with someone through food? Well you have come to the right place. All you have to do is put on this headband and watch this mouthwatering video and your brainwaves will tell us what you like in your food and your future partner!</p>
-        </div>
-
-        <script>
+            <style>
+                div {
+                  border: 1px solid black;
+                  margin: 25px 50px;
+                  background-color: lightblue;
+                }
+                </style>
+                    
+                    <div> Want to find a connection with someone through food? Well you have come to the right place. Our product can connect you with friends and more. All you have to do is put on this headband and watch this mouthwatering video and your brainwaves will tell us what you like in your food preferences and match you with the person of your interest!</p>
+                    </div>
+                    
+                    <script>
             function play_start(){
                 $.post("/open_api/play_movie", { "data":"somedata", "any":"data"},
                     function(data, textStatus) {
