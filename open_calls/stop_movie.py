@@ -6,11 +6,5 @@ def handle_request():
     if g.hb == None:
         return ["Data Flowing"]
 
-    g.hb.exec_command(SensorCommand.CommandStartSignal)
+    g.hb.exec_command(SensorCommand.CommandStopSignal)
     return ["Data Flowing"]
-
-    
-
-
-
-

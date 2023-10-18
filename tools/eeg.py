@@ -2,6 +2,9 @@ from neurosdk.scanner import Scanner
 from neurosdk.sensor import Sensor
 from neurosdk.brainbit_sensor import BrainBitSensor
 from neurosdk.cmn_types import *
+from neurosdk.sensor import sys
+import csv
+from time import sleep 
 
 from tools.logging import logger   
 
@@ -39,4 +42,16 @@ gl_scanner.start()
 
 def get_head_band_sensor_object():
     return gl_sensor
+
+
+with open('output.csv', 'w', newline='') as file:
+            sys.stdout = file  # Redirect stdout to the file
+            if Sensor.is_supported_command(SensorCommand.CommandStartSignal):
+                Sensor.exec_command(SensorCommand.CommandStartSignal) #this line prints the data
+                print("Start signal")
+                sleep(5)
+                Sensor.exec_command(SensorCommand.CommandStopSignal)
+                print("Stop signal")
+            sys.stdout = sys.stdout
+
 

@@ -17,7 +17,6 @@ def get_db_instance():
     return db, cur 
 
 
-
 if __name__ == "__main__":
     db, cur = get_db_instance()
 
