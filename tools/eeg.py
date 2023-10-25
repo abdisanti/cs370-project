@@ -3,8 +3,11 @@ from neurosdk.sensor import Sensor
 from neurosdk.brainbit_sensor import BrainBitSensor
 from neurosdk.cmn_types import *
 from neurosdk.sensor import sys
-import csv
 from time import sleep 
+import pickle 
+import csv
+import re
+import time 
 
 from tools.logging import logger   
 
@@ -16,6 +19,25 @@ def on_sensor_state_changed(sensor, state):
 
 def on_brain_bit_signal_data_received(sensor, data):
     logger.debug(data)
+    
+    start = time.time()
+
+    #Send data to Pickle file
+    with open('BrainDataFile.pkl', 'wb') as f: 
+        pickle.dump(data, f)
+        f.close()
+
+    with open('BrainDataFile.pkl', 'rb') as f: 
+        unpickle_data = pickle.load(f)
+        #Check to make sure unpickled data is deseralized 
+        print(unpickle_data)
+
+    #check to see the time it takes to pickle
+    end = time.time()
+    print('Total pickle time: ', end - start)
+    
+    #with open('BrainDataFile.pkl', 'rb') as f: 
+        #data_loaded
 
 logger.debug("Create Headband Scanner")
 gl_scanner = Scanner([SensorFamily.SensorLEBrainBit])
@@ -44,6 +66,15 @@ def get_head_band_sensor_object():
     return gl_sensor
 
 
+
+
+
+"""
+desired_order = ["PackNum", "Marker", "O1", "O2", "T3", "T4", "Marker", "O1", "O2", "T3", "T4"]
+def create_csv_from_data(filename, data):
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file, delimiter=',')
+
 with open('output.csv', 'w', newline='') as file:
             sys.stdout = file  # Redirect stdout to the file
             if Sensor.is_supported_command(SensorCommand.CommandStartSignal):
@@ -53,5 +84,5 @@ with open('output.csv', 'w', newline='') as file:
                 Sensor.exec_command(SensorCommand.CommandStopSignal)
                 print("Stop signal")
             sys.stdout = sys.stdout
-
+"""
 
