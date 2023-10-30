@@ -4,10 +4,27 @@ from neurosdk.brainbit_sensor import BrainBitSensor
 from neurosdk.cmn_types import *
 from neurosdk.sensor import sys
 import csv
+import pickle
 from time import sleep 
+import gspread #pip install gspread
 
 from tools.logging import logger   
 
+#for activation and access of the google sheets and python
+gc = gspread.service_account(filename='370credentials.json')
+sh = gc.open_by_key('1Jwa2VL4aIiFerTGnpRbHw1DpKbLOHsojTJxU5n8mDaE')
+worksheet = sh.sheet1
+
+#holds values from the google sheets into variables 
+names = worksheet.col_values(2) #names holds an array with all the values in column 2 (names of users)
+print(names)
+
+#make pickle files for users in the google sheets
+filename = ""
+for i in names: 
+    filename = i + ".pkl"
+    print(filename)
+    
 
 #doing all this a the "module level" in "Demo" server mode it will work fine :)
 
