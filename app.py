@@ -27,6 +27,15 @@ app = Flask(__name__)
 #add in flask json
 FlaskJSON(app)
 
+@app.route('/submit', methods=['POST'])
+def submit_form():
+    if request.method == 'POST':
+        FirstName = request.form['fname']
+        LastName = request.form['lname']
+        print(FirstName)
+        print(LastName)
+    return redirect('/static/FoodForThought.html')
+
 #g is flask for a global var storage 
 def init_new_env():
     #To connect to DB

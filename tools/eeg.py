@@ -43,7 +43,7 @@ gl_scanner.start()
 def get_head_band_sensor_object():
     return gl_sensor
 
-
+''''
 with open('output.csv', 'w', newline='') as file:
             sys.stdout = file  # Redirect stdout to the file
             if Sensor.is_supported_command(SensorCommand.CommandStartSignal):
@@ -53,5 +53,5 @@ with open('output.csv', 'w', newline='') as file:
                 Sensor.exec_command(SensorCommand.CommandStopSignal)
                 print("Stop signal")
             sys.stdout = sys.stdout
-
+'''
 
