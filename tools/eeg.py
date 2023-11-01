@@ -8,11 +8,45 @@ import pickle
 import csv
 import re
 import time 
+import gspread
 
 from tools.logging import logger   
 
-
+"""
 #doing all this a the "module level" in "Demo" server mode it will work fine :)
+
+#for activation and access of the google sheets and python
+gc = gspread.service_account('370credentials.json')
+sh = gc.open_by_key('1Jwa2VL4aIiFerTGnpRbHw1DpKbLOHsojTJxU5n8mDaE')
+worksheet = sh.sheet1
+
+#holds values from the google sheets into variables 
+names = worksheet.col_values(2) #names holds an array with all the values in column 2 (names of users)
+print(names)
+
+#make pickle files for users in the google sheets
+filename = ""
+for i in names: 
+    filename = i + ".pkl"
+    print(filename)
+"""
+
+class user_data: 
+    PackNum=0,
+    Marker=0, 
+    O1=-0.0277309682187731, 
+    O2=-0.09960145912309563, 
+    T3=0.020192737763154757, 
+    T4=-0.09928674629854803, 
+    PackNum=0, 
+    Marker=0, 
+    O1=-0.015231337767923134, 
+    O2=-0.08710182867224567, 
+    T3=0.007692725842214434, 
+    T4=-0.08678711584769806
+
+my_object = {'all_data': user_data}
+print(my_object)
 
 def on_sensor_state_changed(sensor, state):
     logger.debug('Sensor {0} is {1}'.format(sensor.Name, state))
@@ -24,7 +58,7 @@ def on_brain_bit_signal_data_received(sensor, data):
 
     #Send data to Pickle file
     with open('BrainDataFile.pkl', 'wb') as f: 
-        pickle.dump(data, f)
+        pickle.dump(my_object, f)
         f.close()
 
     with open('BrainDataFile.pkl', 'rb') as f: 
