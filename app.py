@@ -6,6 +6,8 @@ import sys
 import datetime
 import bcrypt
 import traceback
+import json #for file creation in .js
+import os #for directory specifiy
 
 from tools.eeg import get_head_band_sensor_object
 
@@ -32,8 +34,26 @@ def submit_form():
     if request.method == 'POST':
         FirstName = request.form['fname']
         LastName = request.form['lname']
-        print(FirstName)
-        print(LastName)
+
+        data = {#creates a .js object file that holds first and last name
+            'fname': FirstName,
+            'lname': LastName
+        }
+        json_data = json.dumps(data, indent=4)
+        dir = "profiles"#directory path for file creation
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+
+
+        FirstName += ".js"
+        with open(os.path.join(dir, FirstName), "a") as js_file:#creates a file in append mode with 'with' func to close file creation once complete
+            js_file.write(f"const myData = {json_data};")
+        
+        #os.rename(file_path, os.path.join(dir, FirstName))
+        
+
+        #print(FirstName)
+        #print(LastName)
     return redirect('/static/FoodForThought.html')
 
 #g is flask for a global var storage 
