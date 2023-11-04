@@ -6,7 +6,7 @@ import sys
 import datetime
 import bcrypt
 import traceback
-import json #for file creation in .js
+import json #for file creation in .json
 import os #for directory specifiy
 
 from tools.eeg import get_head_band_sensor_object
@@ -22,12 +22,34 @@ from tools.token_required import token_required
 from tools.logging import logger
 
 ERROR_MSG = "Ooops.. Didn't work!"
+global_array = []#an array that holds json profiles
 
 
 #Create our app
 app = Flask(__name__)
 #add in flask json
 FlaskJSON(app)
+
+#print("This is on startup")
+
+#Function obtains all current profiles in profiles folder to a global array
+def ar_profile():
+    files = os.listdir('profiles')#files varible points to profiles folder
+    json_files = [file for file in files if file.endswith('json')]#filter
+    count = len(json_files)#collects number of files found
+    if len(json_files) > 0:
+        for i in range(count):#for loop fills/updates array with all json objs into array
+            with open(os.path.join('profiles', json_files[i]), 'r') as file:
+                data = json.load(file)
+                #print(i)
+                global_array.append(data)
+    else:
+        print("no profiles to obtain")
+
+#ar_profile()
+#print(global_array[0])
+#print(global_array[1])
+#print(global_array[2])
 
 @app.route('/submit', methods=['POST'])
 def submit_form():
@@ -39,17 +61,21 @@ def submit_form():
             'fname': FirstName,
             'lname': LastName
         }
+        
         json_data = json.dumps(data, indent=4)
         dir = "profiles"#directory path for file creation
         if not os.path.exists(dir):
             os.makedirs(dir)
 
 
-        FirstName += ".js"
+        FirstName += ".json"
         with open(os.path.join(dir, FirstName), "a") as js_file:#creates a file in append mode with 'with' func to close file creation once complete
-            js_file.write(f"const myData = {json_data};")
+            js_file.write(f"{json_data}")
+            #js_file.write(f"const myData = {json_data};")
         
-        #os.rename(file_path, os.path.join(dir, FirstName))
+        #
+
+        ar_profile()#function fills array of profile json objects
         
 
         #print(FirstName)
