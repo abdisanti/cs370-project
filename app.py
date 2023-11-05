@@ -8,7 +8,6 @@ import bcrypt
 import traceback
 import json #for file creation in .json
 import os #for directory specifiy
-
 from tools.eeg import get_head_band_sensor_object
 
 
@@ -26,11 +25,13 @@ global_array = []#an array that holds json profiles
 current_user = "no_user"#string value that holds first name to locate current user
 
 #Create our app
-app = Flask(__name__)
+app = Flask(__name__, template_folder = 'static')
 #add in flask json
 FlaskJSON(app)
 
 #print("This is on startup")
+
+
 
 #Function obtains all current profiles in profiles folder to a global array
 def ar_profile():
@@ -100,9 +101,21 @@ def access_profile():
             if fn == current_user:
                 #print("test")
                 prof_info = global_array[i]
-                print(prof_info)#test
-    
-    return redirect('/static/UmamindProfile.html')
+                i = count + 1#end for loop
+                print("entered if state")
+                break
+            else:
+                print("In else state")
+                prof_info = "no_user"
+
+        print("fn is: ",fn)
+        print("prof_info is: ",prof_info)
+        if prof_info == "no_user":
+            return render_template('UmamindProfile.html', f = "no data found", l = "no data found")#variables f and l are sent and used in UmamindProfile.html
+        f_name = prof_info['fname']
+        l_name = prof_info['lname']
+
+    return render_template('UmamindProfile.html', f = f_name, l = l_name)#variables f and l are sent and used in UmamindProfile.html
 
 
 
