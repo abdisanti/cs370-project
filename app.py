@@ -23,7 +23,7 @@ from tools.logging import logger
 
 ERROR_MSG = "Ooops.. Didn't work!"
 global_array = []#an array that holds json profiles
-
+current_user = "no_user"#string value that holds first name to locate current user
 
 #Create our app
 app = Flask(__name__)
@@ -50,8 +50,11 @@ def ar_profile():
 #print(global_array[0])
 #print(global_array[1])
 #print(global_array[2])
+def update_current_user(new_user):#function that updates current_user string
+    global current_user
+    current_user = new_user
 
-@app.route('/submit', methods=['POST'])
+@app.route('/submit', methods=['POST'])#function that creates a .json file with user inputed first and last name and stores in profiles folder
 def submit_form():
     if request.method == 'POST':
         FirstName = request.form['fname']
@@ -61,12 +64,13 @@ def submit_form():
             'fname': FirstName,
             'lname': LastName
         }
-        
+
+        update_current_user(FirstName) #update current_user strong to later identify specific profile in use/login
+
         json_data = json.dumps(data, indent=4)
         dir = "profiles"#directory path for file creation
         if not os.path.exists(dir):
             os.makedirs(dir)
-
 
         FirstName += ".json"
         with open(os.path.join(dir, FirstName), "a") as js_file:#creates a file in append mode with 'with' func to close file creation once complete
@@ -76,11 +80,31 @@ def submit_form():
         #
 
         ar_profile()#function fills array of profile json objects
-        
+
 
         #print(FirstName)
         #print(LastName)
     return redirect('/static/FoodForThought.html')
+
+
+@app.route('/profile', methods=['POST'])#function that executes on accesss to prfile page and searches for correct profile to display
+def access_profile():
+
+    if request.method == 'POST':
+        #print("test")
+        count = len(global_array)#obtain num of elemnts in array
+        #print("current is: ",current_user)
+        for i in range(count):
+            data = global_array[i]
+            fn = data['fname']
+            if fn == current_user:
+                #print("test")
+                prof_info = global_array[i]
+                print(prof_info)#test
+    
+    return redirect('/static/UmamindProfile.html')
+
+
 
 #g is flask for a global var storage 
 def init_new_env():
