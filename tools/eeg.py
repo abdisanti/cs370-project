@@ -31,22 +31,7 @@ for i in names:
     print(filename)
 """
 
-class user_data: 
-    PackNum=0,
-    Marker=0, 
-    O1=-0.0277309682187731, 
-    O2=-0.09960145912309563, 
-    T3=0.020192737763154757, 
-    T4=-0.09928674629854803, 
-    PackNum=0, 
-    Marker=0, 
-    O1=-0.015231337767923134, 
-    O2=-0.08710182867224567, 
-    T3=0.007692725842214434, 
-    T4=-0.08678711584769806
 
-my_object = {'all_data': user_data}
-print(my_object)
 
 def on_sensor_state_changed(sensor, state):
     logger.debug('Sensor {0} is {1}'.format(sensor.Name, state))
@@ -54,24 +39,25 @@ def on_sensor_state_changed(sensor, state):
 def on_brain_bit_signal_data_received(sensor, data):
     logger.debug(data)
     
-    start = time.time()
-
-    #Send data to Pickle file
-    with open('BrainDataFile.pkl', 'wb') as f: 
-        pickle.dump(my_object, f)
-        f.close()
+    #Comment out when using headband
+    #Get mock data to simulate using headband store into data 
+    file = open('tools/MockBrainData1.pkl', 'r')
+    data = file.readlines()
+    file.close()
+    
+   #Pickle testing: Send mock data to pickle file as if it were real data, pickle it then unpickle it/
+    with open('BrainDataFile.pkl', 'wb') as file: 
+        pickle.dump(data, file)
+        file.close()
 
     with open('BrainDataFile.pkl', 'rb') as f: 
         unpickle_data = pickle.load(f)
         #Check to make sure unpickled data is deseralized 
+        print("Unpickled Data: \n\n")
         print(unpickle_data)
 
-    #check to see the time it takes to pickle
-    end = time.time()
-    print('Total pickle time: ', end - start)
     
-    #with open('BrainDataFile.pkl', 'rb') as f: 
-        #data_loaded
+
 
 logger.debug("Create Headband Scanner")
 gl_scanner = Scanner([SensorFamily.SensorLEBrainBit])
@@ -94,6 +80,9 @@ gl_scanner.sensorsChanged = sensorFound
 
 logger.debug("Start scan")
 gl_scanner.start()
+
+logger.debug("Stop Scan")
+gl_scanner.stop()
 
 
 def get_head_band_sensor_object():
