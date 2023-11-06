@@ -9,6 +9,7 @@ import csv
 import re
 import time 
 import gspread
+from Matching import *
 
 from tools.logging import logger   
 
@@ -51,10 +52,12 @@ def on_brain_bit_signal_data_received(sensor, data):
         file.close()
 
     with open('BrainDataFile.pkl', 'rb') as f: 
-        unpickle_data = pickle.load(f)
+        data = pickle.load(f)
         #Check to make sure unpickled data is deseralized 
         print("Unpickled Data: \n\n")
-        print(unpickle_data)
+        print(data)
+
+    get_avgs(data)
 
     
 
