@@ -34,6 +34,8 @@ def get_avgs(brainData):
     T3t = T3t / T3_length
     T4t = T4t / T4_length
 
+    #Put the data into an object to be added to the user profile 
+    #Note: fname and lname only there for testing purposes
     Data = {
         "fname": "Person",
         "lname": "1", 
@@ -43,6 +45,8 @@ def get_avgs(brainData):
         "T4avg": T4t
     }
 
+    #Write the data into the profiles file
+    #Need to find a way to know the current user to send the data to their file
     with open("tools/person1.json", "wb") as file: 
         file.write(Data)
 

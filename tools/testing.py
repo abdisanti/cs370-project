@@ -1,13 +1,8 @@
 #import gspread
 from parseAlgo import * 
+#from app import *
 import pickle
-
-
-"""
-gc = gspread.service_account(filename='credentials.json')
-sh = gc.open_by_key('1xijiwWLX5fwNYTJRgdCvz7g2G7wU4npk2-tedXStwSY')
-worksheet1= sh.sheet1
-"""
+import json
 
 #keep count of all of the variables
 O1t = 0.0
@@ -50,8 +45,6 @@ with open('BrainDataFile.pkl', "rb") as file:
 
     file.close()
 
-print("done")
-
 #find averages
 O1t = O1t / O1_length
 O2t = O2t / O2_length
@@ -62,8 +55,27 @@ T4t = T4t / T4_length
 print("averages are: ")
 print("01: " + str(O1t) + " O2: " + str(O2t) + " T3: " + str(T3t) + " T4: " + str(T4t))
 
+#Read current contents of file and update them with BrainBit averages
+with open("profiles/Matt.json", "rb") as file: 
+    data1 = json.load(file)
+    data1_len = len(data1)
+    print(data1_len)
+    for i in range(data1_len): 
+        data2 = data1[i]
+        print(data2)
+
+        
+    data1.update({"fname": "Matt", "lname": "Miller", "O1avg": O1t, "O2avg": O2t, "T3avg": T3t, "T4avg": T4t})
+    json_data = json.dumps(data1, indent=4)
+    
+
+#re-write the updata data back to the profile
+with open("profiles/Matt.json", "w") as file: 
+    file.write(f"{json_data}")
+
+         
 # Load profiles from JSON files
-with open("tools/person1.json", "r") as file:
+with open("profiles/Matt.json", "r") as file:
     person1_data = json.load(file)
 
 with open("tools/person2.json", "r") as file:
@@ -73,3 +85,4 @@ with open("tools/person2.json", "r") as file:
 result = euclidean(person1_data, person2_data)
 print("the following is the eucledian distance between person1 and person 2: ")
 print(result)
+

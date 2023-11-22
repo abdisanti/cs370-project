@@ -9,7 +9,8 @@ import csv
 import re
 import time 
 import gspread
-from Matching import *
+#from Matching import *
+from app import *
 
 from tools.logging import logger   
 
@@ -31,8 +32,6 @@ for i in names:
     filename = i + ".pkl"
     print(filename)
 """
-
-
 
 def on_sensor_state_changed(sensor, state):
     logger.debug('Sensor {0} is {1}'.format(sensor.Name, state))
@@ -57,7 +56,7 @@ def on_brain_bit_signal_data_received(sensor, data):
         print("Unpickled Data: \n\n")
         print(data)
 
-    get_avgs(data)
+    #get_avgs(data)
 
     
 

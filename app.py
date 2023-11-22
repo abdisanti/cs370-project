@@ -47,6 +47,17 @@ def ar_profile():
     else:
         print("no profiles to obtain")
 
+def get_profile(user_profile):
+     length = len(global_array)
+     for i in range(len): 
+         user_profile = global_array[i]
+         print(user_profile)
+
+    
+
+    
+
+
 #ar_profile()
 #print(global_array[0])
 #print(global_array[1])
@@ -186,3 +197,4 @@ def exec_proc(proc_name):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
+    
