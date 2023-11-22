@@ -90,16 +90,7 @@ gl_scanner.stop()
 def get_head_band_sensor_object():
     return gl_sensor
 
-
-
-
-
-"""
-desired_order = ["PackNum", "Marker", "O1", "O2", "T3", "T4", "Marker", "O1", "O2", "T3", "T4"]
-def create_csv_from_data(filename, data):
-    with open(filename, mode='w', newline='') as file:
-        writer = csv.writer(file, delimiter=',')
-
+''''
 with open('output.csv', 'w', newline='') as file:
             sys.stdout = file  # Redirect stdout to the file
             if Sensor.is_supported_command(SensorCommand.CommandStartSignal):
@@ -109,5 +100,5 @@ with open('output.csv', 'w', newline='') as file:
                 Sensor.exec_command(SensorCommand.CommandStopSignal)
                 print("Stop signal")
             sys.stdout = sys.stdout
-"""
+'''
 
