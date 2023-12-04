@@ -91,7 +91,7 @@ def submit_form():
 
         #print(FirstName)
         #print(LastName)
-    return redirect('/static/FoodForThought.html')
+    return redirect('/static/UmamindFoodInfo.html')
 
 
 @app.route('/profile', methods=['POST'])#function that executes on accesss to prfile page and searches for correct profile to display
