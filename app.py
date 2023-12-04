@@ -61,10 +61,15 @@ def submit_form():
     if request.method == 'POST':
         FirstName = request.form['fname']
         LastName = request.form['lname']
+        Age = request.form['Age']
+        Gender = request.form['Gender']
 
         data = {#creates a .js object file that holds first and last name
             'fname': FirstName,
-            'lname': LastName
+            'lname': LastName,
+            'Age': Age,
+            'Gender' : Gender
+
         }
 
         update_current_user(FirstName) #update current_user strong to later identify specific profile in use/login
