@@ -1,4 +1,1 @@
-[2023-10-18 14:37:09.873] [sdk_log] [warning] GetGattServices Failed: [Unreachable] [Attemtp]:[2]
-[2023-10-18 14:37:17.572] [sdk_log] [warning] GetGattServices Failed: [Unreachable] [Attemtp]:[1]
-[2023-10-18 14:37:25.262] [sdk_log] [error] Cannot create BLE device.
-[2023-10-18 14:37:32.947] [sdk_log] [warning] GetGattServices Failed: [Unreachable] [Attemtp]:[2]
+[2023-11-27 15:23:22.736] [sdk_log] [debug] BLE Scan stopped
