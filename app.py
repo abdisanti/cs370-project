@@ -8,6 +8,7 @@ import bcrypt
 import traceback
 import json #for file creation in .json
 import os #for directory specifiy
+import psycopg2
 
 from tools.eeg import get_head_band_sensor_object
 
@@ -21,8 +22,21 @@ from tools.token_required import token_required
 
 from tools.logging import logger
 
+#variables for database communication
+hostname = 'umamind-1.crh1scx9g148.us-east-1.rds.amazonaws.com'
+database = 'postgres'
+username = 'UmaMindGroup'
+pwd = 12132023
+port_id = 5432
+#conn = None
+#cur = None
+
+database_info = {
+
+}
+
 ERROR_MSG = "Ooops.. Didn't work!"
-global_array = []#an array that holds json profiles
+global_array = []#an array that holds json/database profiles
 current_user = "no_user"#string value that holds first name to locate current user
 
 #Create our app
@@ -34,27 +48,66 @@ FlaskJSON(app)
 
 
 
-#Function obtains all current profiles in profiles folder to a global array
+#Function obtains all current profiles in from database to a global array
 def ar_profile():
-    files = os.listdir('profiles')#files varible points to profiles folder
-    json_files = [file for file in files if file.endswith('json')]#filter
-    count = len(json_files)#collects number of files found
-    if len(json_files) > 0:
-        for i in range(count):#for loop fills/updates array with all json objs into array
-            with open(os.path.join('profiles', json_files[i]), 'r') as file:
-                data = json.load(file)
-                #print(i)
-                global_array.append(data)
-    else:
-        print("no profiles to obtain")
+    conn = None
+    cur = None 
+    try:
+        conn = psycopg2.connect(host = hostname, dbname = database, user = username, password = pwd, port = port_id)
+        print("connected")
+        cur = conn.cursor()
 
-#ar_profile()
-#print(global_array[0])
-#print(global_array[1])
-#print(global_array[2])
+        get_profile_script = 'SELECT * FROM users'
+        cur.execute(get_profile_script)
+        #print(cur.fetchall())
+        rows = cur.fetchall()
+
+        for row in rows:
+            global_array.append(row)
+            #print(row)
+    
+        #print(global_array[0])
+        #print(global_array[1])
+        #print(global_array[2])
+
+
+        conn.commit()
+    except Exception as error:
+        print(error)
+    finally:
+        if cur is not None:
+            cur.close()
+        if conn is not None:
+            conn.close()
+
+
 def update_current_user(new_user):#function that updates current_user string
     global current_user
     current_user = new_user
+
+@app.route('/login', methods=['POST', 'GET'])
+def login_form():
+    #print("Login button")
+    ar_profile()#update array with current database data
+    count = len(global_array)
+    first = request.form['First Name']
+    last = request.form['Last Name']
+    
+    for i in range(count):
+        if first == global_array[i][1]: #1 is tuple for first name & i is array slot
+            if last == global_array[i][2]:
+                update_current_user(global_array[i])
+                return redirect('static/UmamindHome.html')
+            else:
+                i = i + 1
+        else:
+            i = i + 1#incriment
+    
+    #print(global_array[0])
+    #print(global_array[0][1])
+    #print("Profile not found")
+    return redirect('static/2nd Login.html')
+
 
 @app.route('/submit', methods=['POST'])#function that creates a .json file with user inputed first and last name and stores in profiles folder
 def submit_form():
@@ -63,7 +116,7 @@ def submit_form():
         LastName = request.form['lname']
         Age = request.form['Age']
         Gender = request.form['Gender']
-
+        '''
         data = {#creates a .js object file that holds first and last name
             'fname': FirstName,
             'lname': LastName,
@@ -71,26 +124,34 @@ def submit_form():
             'Gender' : Gender
 
         }
+        '''
+        #database update/communication:
+        conn = None
+        cur = None
 
-        update_current_user(FirstName) #update current_user strong to later identify specific profile in use/login
+        try:
+            conn = psycopg2.connect(host = hostname, dbname = database, user = username, password = pwd, port = port_id)
+            print("connected")
+            cur = conn.cursor()
 
-        json_data = json.dumps(data, indent=4)
-        dir = "profiles"#directory path for file creation
-        if not os.path.exists(dir):
-            os.makedirs(dir)
+            enterProfile_script = 'INSERT INTO users (fname, lname, age, gender) VALUES (%s, %s, %s, %s)'
+            user_values = (FirstName, LastName, Age, Gender)
+            cur.execute(enterProfile_script,user_values)
 
-        FirstName += ".json"
-        with open(os.path.join(dir, FirstName), "a") as js_file:#creates a file in append mode with 'with' func to close file creation once complete
-            js_file.write(f"{json_data}")
-            #js_file.write(f"const myData = {json_data};")
+
+            conn.commit()
+        except Exception as error:
+            print(error)
+        finally:
+            if cur is not None:
+                cur.close()
+            if conn is not None:
+                conn.close()
+               
+        ar_profile()#function fills array of profile database data
+        update_current_user(global_array[-1])#current_user hold tupal of created user
+        #current_user = global_array[-1]#current_user hold tupal of created user
         
-        
-        
-        #ar_profile()#function fills array of profile json objects
-
-
-        #print(FirstName)
-        #print(LastName)
     return redirect('/static/UmamindFoodInfo.html')
 
 
@@ -99,8 +160,20 @@ def access_profile():
 
     if request.method == 'POST':
         #print("test")
-        count = len(global_array)#obtain num of elemnts in array
-        #print("current is: ",current_user)
+        count = len(global_array)#obtain num of elements in array
+        print("current is: ")
+        print(current_user)
+        ID = current_user[0]
+        fn = current_user[1]
+        ls = current_user[2]
+        age = current_user[3]
+        gender = current_user[4]
+        print("test")
+        print(ID,fn,ls,age,gender)
+        
+        return render_template('UmamindProfile.html', f = fn, l = ls, a = age, g = gender)
+        
+        '''
         for i in range(count):
             data = global_array[i]
             fn = data['fname']
@@ -122,6 +195,7 @@ def access_profile():
         l_name = prof_info['lname']
 
     return render_template('UmamindProfile.html', f = f_name, l = l_name)#variables f and l are sent and used in UmamindProfile.html
+    '''
 
 
 
