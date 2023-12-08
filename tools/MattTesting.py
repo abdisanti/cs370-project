@@ -13,6 +13,7 @@ pwd = 12132023
 port_id = 5432
 conn = None
 cur = None
+euclideanScores = []
 
 #queiries 
 insertUser = 'INSERT INTO users (fname, lname, age, gender) VALUES (%s, %s, %s, %s)'
@@ -161,3 +162,30 @@ def calcEuclidean(currentID):
             cur.close()
         if conn is not None:
             conn.close()    
+
+#This function will get the three closest euclidean scores and store them into global variable 
+def match(): 
+    global euclideanScores
+
+    try: 
+        conn = psycopg2.connect(host=hostname, dbname=database, user=username, password=pwd, port=port_id)
+        print("connected")
+        cur = conn.cursor()
+
+        cur.execute(
+            "WITH cte AS (SELECT *, ROW_NUMBER() OVER (ORDER BY euclidean) rn FROM data) SELECT user_id, euclidean FROM cte WHERE rn <= 3 ORDER BY euclidean;"
+        )
+
+        values = cur.fetchall()
+        print(values)
+        euclideanScores.append(values)
+  
+        return euclideanScores
+        conn.commit()
+    except Exception as error:
+        print(error)
+    finally: 
+        if cur is not None:
+            cur.close()
+        if conn is not None:
+            conn.close()
