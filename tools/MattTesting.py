@@ -1,5 +1,5 @@
 #import gspread
-from parseAlgo import * 
+from tools.parseAlgo import * 
 #from app import *
 import pickle
 #import json

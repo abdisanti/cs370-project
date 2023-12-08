@@ -9,6 +9,10 @@ import traceback
 import json #for file creation in .json
 import os #for directory specifiy
 import psycopg2
+import sys
+# caution: path[0] is reserved for script path (or '' in REPL)
+
+from tools.MattTesting import *
 
 from tools.eeg import get_head_band_sensor_object
 
