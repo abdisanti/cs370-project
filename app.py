@@ -3,15 +3,13 @@ from flask_json import FlaskJSON, JsonError, json_response, as_json
 import jwt
 
 import sys
+sys.path.append('cs370-project/tools')
 import datetime
 import bcrypt
 import traceback
 import json #for file creation in .json
 import os #for directory specifiy
 import psycopg2
-import sys
-# caution: path[0] is reserved for script path (or '' in REPL)
-
 from tools.MattTesting import *
 
 from tools.eeg import get_head_band_sensor_object
@@ -89,6 +87,58 @@ def update_current_user(new_user):#function that updates current_user string
     global current_user
     current_user = new_user
 
+@app.route('/search', methods=['POST', 'GET'])
+def search_func():
+    calcEuclidean(current_user)
+    users = match()
+    p1_id = users[0][0][0]
+    p1_score = users[0][0][1]
+
+    p2_id = users[0][1][0]
+    p2_score = users[0][1][1]
+
+    p3_id = users[0][2][0]
+    p3_score = users[0][2][1]
+    
+    ar_profile()#update array
+    count = len(global_array)
+    for i in range(count):
+        if p1_id == global_array[i][0]:
+            f1 = global_array[i][1]
+            l1 = global_array[i][2]
+            a1 = global_array[i][3]
+            g1 = global_array[i][4]
+            break
+        else:
+            i = i + 1
+
+    for i in range(count):
+        if p2_id == global_array[i][0]:
+            f2 = global_array[i][1]
+            l2 = global_array[i][2]
+            a2 = global_array[i][3]
+            g2 = global_array[i][4]
+            break
+        else:
+            i = i + 1
+
+    for i in range(count):
+        if p3_id == global_array[i][0]:
+            f3 = global_array[i][1]
+            l3 = global_array[i][2]
+            a3 = global_array[i][3]
+            g3 = global_array[i][4]
+            break
+        else:
+            i = i + 1
+
+    print(f1,f2,f3)
+
+    return render_template('SearchPage.html', f1=f1,l1=l1,a1=a1,g1=g1,f2=f2,l2=l2,a2=a2,g2=g2,f3=f3,l3=l3,a3=a3,g3=g3,p1_score=p1_score,p2_score=p2_score,p3_score=p3_score)
+
+#search_func()
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login_form():
     #print("Login button")
@@ -159,10 +209,10 @@ def submit_form():
     return redirect('/static/UmamindFoodInfo.html')
 
 
-@app.route('/profile', methods=['POST'])#function that executes on accesss to prfile page and searches for correct profile to display
+@app.route('/profile', methods=['POST', 'GET'])#function that executes on accesss to prfile page and searches for correct profile to display
 def access_profile():
 
-    if request.method == 'POST':
+    #if request.method == 'POST':
         #print("test")
         count = len(global_array)#obtain num of elements in array
         print("current is: ")

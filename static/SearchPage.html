@@ -1,17 +1,60 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<img src="UmaMindIcon.png" alt="UmamindIcon" style="float:left; width:80px;height:80px;">
+		<img src="UmaMindTitle.png" alt="Umamind Title Illustrated in a stylized bubble" style="float:center; width:180px;height:180px;">
+
 		<title> Umamind Search</title>
 		<meta name="description" content="This is the search page for users to look thru their matches">
 	</head>
 	<body style="background-color:rgb(219, 150, 133);">
 		<img src="foodbanner2.jpeg" alt="sample pic" width ="1550" height="300">  <!--Change the size  [width="400" height="122"]-->
-    	<h2 style="text-align: center;">Your Flavor Profile Matches</h2>
+		<h2 style="text-align: center;">Your Flavor Profile Matches</h2>
         <section>
 		<h3 style="text-align: center;">This list consitst of your matches from your <em>Flavor Profile</em></h3>
+			<section style="text-align: center;">
+				<button type="button" style="margin: 5px;">Age</button><button type="button" style="margin: 5px">Gender</button><button type="button"style="margin: 5px">Compatability 
+			</section>
+			<p>
+				<table border="5" style="border-color: lightgoldenrodyellow ;background-color: darkorange;width: 100%; border-radius: 10px;">
+					<tr>
+						<td><h1>1</h1></td>
+						<th>User: {{ l1 }}, {{ f1 }}
+							<table border="3" style="border-color: lightgoldenrodyellow; background-color: darkorange; width:100% ;height: 0m; border-bottom-style:none;">
+								<tr><td>Age:{{ a1 }}</td><td>Gender: {{ g1 }}</td></tr>
+							</table>
+						<th>Compatability score : {{ p1_score }}</th>
+					</tr>
+				</table>
+			</p>
+			<p>
+				<table border="5" style="border-color: lightgoldenrodyellow ;background-color: darkorange;width: 100%; border-radius: 10px;">
+					<tr>
+						<td><h1>2</h1></td>
+						<th>User: {{ l2 }}, {{ f2 }}
+							<table border="3" style="border-color: lightgoldenrodyellow; background-color: darkorange; width:100% ;height: 0m; border-bottom-style:none;">
+								<tr><td>Age:{{ a2 }}</td><td>Gender: {{ g2 }}</td></tr>
+							</table>
+						<th>Compatability score : {{ p2_score }}</th>
+					</tr>
+				</table>
+			</p>
+			<p>
+				<table border="5" style="border-color: lightgoldenrodyellow ;background-color: darkorange;width: 100%; border-radius: 10px;">
+					<tr>
+						<td><h1>3</h1></td>
+						<th>User: {{ l3 }}, {{ f3 }}
+							<table border="3" style="border-color: lightgoldenrodyellow; background-color: darkorange; width:100% ;height: 0m; border-bottom-style:none;">
+								<tr><td>Age:{{ a3 }}</td><td>Gender: {{ g3 }}</td></tr>
+							</table>
+						<th>Compatability score : {{ p3_score }}</th>
+					</tr>
+				</table>
+			</p>	
+	</section><br>
+		<section style="text-align: center;">
+			<a href="UmamindHome.html" style="color: rgb(61, 249, 161);" >To the umamind Home page</a>
+			<a href="UmamindProfile.html" style="color: aqua; margin: 10px">To Your Profile Page</a>
 		</section>
-
-		<a href="UmamindHome.html" style="color: rgb(61, 249, 161);" >To the umamind Home page</a>
-
 	</body>
 </html>
