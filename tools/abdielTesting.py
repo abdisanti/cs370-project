@@ -1,5 +1,7 @@
 from MattTesting import *
-from app import current_user
+#from app import current_user
 
-id = current_user
-print(i)
+currentUser = 4
+
+#calcAndStoreAvg(currentUser)
+calcEuclidean(currentUser)

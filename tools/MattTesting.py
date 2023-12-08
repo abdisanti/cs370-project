@@ -4,7 +4,7 @@ from parseAlgo import *
 import pickle
 #import json
 import psycopg2
-from app import current_user
+#from app import current_user
 
 hostname = 'umamind-1.crh1scx9g148.us-east-1.rds.amazonaws.com'
 database = 'postgres'
@@ -17,18 +17,13 @@ cur = None
 #queiries 
 insertUser = 'INSERT INTO users (fname, lname, age, gender) VALUES (%s, %s, %s, %s)'
 insertAvgs = 'INSERT INTO data (o1, o2, t3, t4) VALUES (%s, %s, %s, %s)'
-insertEuc = 'INSERT INTO data (euclidean) VALUES (%s)'
 
-def calcAndStoreAvg(current_user):
+#this function calculates averages from mock pickl file and stores the results to the data table in database
+def calcAndStoreAvg():
     try:
         conn = psycopg2.connect(host=hostname, dbname=database, user=username, password=pwd, port=port_id)
         print("connected")
         cur = conn.cursor()
-
-        user = ("Stacy", "Nguyen", 21, "female")
-        cur.execute(insertUser, user)
-        #cur.execute("UPDATE users SET fname = 'John', lname = 'Smith' WHERE id = 1")
-        conn.commit()
 
         #keep count of all of the variables
         O1t = 0.0
@@ -78,11 +73,37 @@ def calcAndStoreAvg(current_user):
         T4t = T4t / T4_length
 
         #display averages
+        '''
         print("averages are: ")
         print("01: " + str(O1t) + " O2: " + str(O2t) + " T3: " + str(T3t) + " T4: " + str(T4t))
+        '''
+        #insertHardCode = (-0.107654321098765, -0.106543210987654, -0.095432109876543, -0.112345678901234)
 
-        averages = ( -0.101235684329872,  -0.112345678901234, -0.094567890123456, -0.109876543210987)
-        cur.execute(insertAvgs, averages)
+        #averagesInsert = (O1t,  O2t, T3t, T4t)  #used for when current user is new to the database
+        #averagesUpdate = (O1t,  O2t, T3t, T4t, current_userID)  #used for when current user is already in db
+
+        '''   
+        matchFound = False
+        getUserInfo_script = 'SELECT id FROM users'
+
+        cur.execute(getUserInfo_script)
+        user_ids = [row[0] for row in cur.fetchall()]
+
+        for id in user_ids:
+            if current_userID == id:
+                matchFound = True
+    
+        if matchFound == True:
+            cur.execute('UPDATE data SET o1 = %s, o2 = %s, t3 = %s, t4 = %s WHERE user_id = %s', averagesUpdate)
+            print("already in database, updating averages")
+        else:
+            cur.execute(insertUser, ("Bob", "Builder", 25, "male"))
+            cur.execute(insertAvgs, insertHardCode)
+            print("new to database, adding new averages to database")
+        ''' 
+        #store calculated averages into averages, send them to the data table using insertAvg query
+        averagesInsert = (O1t,  O2t, T3t, T4t)
+        cur.execute(insertAvgs, averagesInsert)
 
         conn.commit()
     except Exception as error:
@@ -94,27 +115,43 @@ def calcAndStoreAvg(current_user):
             conn.close()
 
 
+#This function will calculate the Eucledian scores for all user in the table based on the current user ID#.
 def calcEuclidean(currentID):
     try:
         conn = psycopg2.connect(host=hostname, dbname=database, user=username, password=pwd, port=port_id)
         print("connected")
         cur = conn.cursor()
 
-        cur.execute(f"SELECT column1, column2, column3, column4 FROM your_table_name WHERE user_id = {currentID}")
+        #get averages data of the current user
+        cur.execute(f"SELECT o1, o2, t3, t4 FROM data WHERE user_id = {currentID}")
         current_user_data = cur.fetchone()
+        
 
         if current_user_data:
-            current_column1, current_column2, current_column3, current_column4 = current_user_data
+            cur_o1, cur_o2, cur_t3, cur_t4 = current_user_data #insert current user data into variables
 
-            # Fetch data for all users except the current one
-            cur.execute(f"SELECT user_id, column1, column2, column3, column4 FROM your_table_name WHERE user_id <> {currentID}")
-            other_users_data = cur.fetchall()
+            #Fetch data for all users except the current one
+            cur.execute(f"SELECT user_id, o1, o2, t3, t4 FROM data WHERE user_id <> {currentID}")
+            other_users_data = cur.fetchall() #store it all in one variable
 
+            #loop through other_users_data, run the euclidean equation, store it into the other user euclidean field
+            for other_user_id, other_o1, other_o2, other_t3, other_t4 in other_users_data:
+                euclideanVal = sqrt(
+                    (cur_o1 - other_o1)**2 +
+                    (cur_o2 - other_o2)**2 +
+                    (cur_t3 - other_t3)**2 +
+                    (cur_t4 - other_t4)**2
+                )
+                #query for inserting euclidean values
+                variables = (euclideanVal,other_user_id)
+                cur.execute('UPDATE data SET euclidean = %s WHERE user_id = %s', variables)
+
+            variables = (None, currentID)
+            cur.execute('UPDATE data SET euclidean = %s WHERE user_id = %s', variables)
+                
             
-
-
-
-
+            #end of for
+        #end of if
 
         conn.commit()
     except Exception as error:
@@ -124,44 +161,3 @@ def calcEuclidean(currentID):
             cur.close()
         if conn is not None:
             conn.close()    
-
-
-
-
-
-
-
-
-
-'''
-#Read current contents of file and update them with BrainBit averages
-with open("profiles/Matt.json", "rb") as file: 
-    data1 = json.load(file)
-    data1_len = len(data1)
-    print(data1_len)
-    for i in range(data1_len): 
-        data2 = data1[i]
-        print(data2)
-
-        
-    data1.update({"fname": "Matt", "lname": "Miller", "O1avg": O1t, "O2avg": O2t, "T3avg": T3t, "T4avg": T4t})
-    json_data = json.dumps(data1, indent=4)
-    
-
-#re-write the updata data back to the profile
-with open("profiles/Matt.json", "w") as file: 
-    file.write(f"{json_data}")
-
-         
-# Load profiles from JSON files
-with open("profiles/Matt.json", "r") as file:
-    person1_data = json.load(file)
-
-with open("tools/person2.json", "r") as file:
-    person2_data = json.load(file)
-
-
-result = euclidean(person1_data, person2_data)
-print("the following is the eucledian distance between person1 and person 2: ")
-print(result)
-'''
