@@ -14,6 +14,28 @@ port_id = 5432
 conn = None
 cur = None
 
+#queiries 
+insertUser = 'INSERT INTO users (fname, lname, age, gender) VALUES (%s, %s, %s, %s)'
+insertAvgs = 'INSERT INTO data (o1, o2, t3, t4) VALUES (%s, %s, %s, %s)'
+
+#this function calculates averages from mock pickl file and stores the results to the data table in database
+def calcAndStoreAvg():
+    try:
+        conn = psycopg2.connect(host=hostname, dbname=database, user=username, password=pwd, port=port_id)
+        print("connected")
+        cur = conn.cursor()
+#import json
+import psycopg2
+#from app import current_user
+
+hostname = 'umamind-1.crh1scx9g148.us-east-1.rds.amazonaws.com'
+database = 'postgres'
+username = 'UmaMindGroup'
+pwd = 12132023
+port_id = 5432
+conn = None
+cur = None
+
 matchedUsers = []
 current_user = 5
 #queiries 
@@ -37,10 +59,24 @@ def calcAndStoreAvg(current_user):
         O2t = 0.0
         T3t = 0.0
         T4t = 0.0
+        #keep count of all of the variables
+        O1t = 0.0
+        O2t = 0.0
+        T3t = 0.0
+        T4t = 0.0
 
         #row counter
         count = 1
+        #row counter
+        count = 1
 
+        with open('BrainDataFile.pkl', "rb") as file: 
+            data = pickle.load(file)
+            #parse out all of the variables
+            O1 = (getO1(str(data)))
+            O2 = (getO2(str(data)))
+            T3 = (getT3(str(data)))
+            T4 = (getT4(str(data)))
         with open('BrainDataFile.pkl', "rb") as file: 
             data = pickle.load(file)
             #parse out all of the variables
@@ -54,25 +90,47 @@ def calcAndStoreAvg(current_user):
             O2_length = len(O2)
             T3_length = len(T3)
             T4_length = len(T4)
+            #add variables as floats 
+            O1_length = len(O1)
+            O2_length = len(O2)
+            T3_length = len(T3)
+            T4_length = len(T4)
 
+            for i in range(O1_length): 
+                 O1t += float(O1[i])
             for i in range(O1_length): 
                  O1t += float(O1[i])
     
             for i in range(O2_length): 
                 O2t += float(O2[i])
+            for i in range(O2_length): 
+                O2t += float(O2[i])
 
             for i in range(T3_length):     
                 T3t += float(T3[i])
+            for i in range(T3_length):     
+                T3t += float(T3[i])
     
+            for i in range(T4_length):
+                T4t += float(T4[i])
             for i in range(T4_length):
                 T4t += float(T4[i])
 
             #print current variables
             #print("O1: "+O1 +" "+"O2: "+O2+ " "+"T3: "+T3+ " "+"T4: "+T4) 
             count += 1 #update counter
+            #print current variables
+            #print("O1: "+O1 +" "+"O2: "+O2+ " "+"T3: "+T3+ " "+"T4: "+T4) 
+            count += 1 #update counter
 
             file.close()
+            file.close()
 
+        #find averages
+        O1t = O1t / O1_length
+        O2t = O2t / O2_length
+        T3t = T3t / T3_length
+        T4t = T4t / T4_length
         #find averages
         O1t = O1t / O1_length
         O2t = O2t / O2_length
