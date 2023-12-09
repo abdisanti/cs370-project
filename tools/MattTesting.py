@@ -177,7 +177,6 @@ def match():
         )
 
         values = cur.fetchall()
-        print(values)
         euclideanScores.append(values)
   
         return euclideanScores

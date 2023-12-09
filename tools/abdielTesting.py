@@ -5,8 +5,12 @@ from MattTesting import *
 currentUser = 4
 
 #calcAndStoreAvg(currentUser)
+
+calcAndStoreAvg()
+
 calcEuclidean(currentUser)
 values = match()
-print(values[0][1][1])
+print(values)
+
 
 
