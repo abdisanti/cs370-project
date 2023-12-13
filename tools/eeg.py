@@ -15,25 +15,6 @@ import gspread
 from tools.logging import logger
 
 
-"""
-#doing all this a the "module level" in "Demo" server mode it will work fine :)
-
-#for activation and access of the google sheets and python
-gc = gspread.service_account('370credentials.json')
-sh = gc.open_by_key('1Jwa2VL4aIiFerTGnpRbHw1DpKbLOHsojTJxU5n8mDaE')
-worksheet = sh.sheet1
-
-#holds values from the google sheets into variables 
-names = worksheet.col_values(2) #names holds an array with all the values in column 2 (names of users)
-print(names)
-
-#make pickle files for users in the google sheets
-filename = ""
-for i in names: 
-    filename = i + ".pkl"
-    print(filename)
-"""
-
 def on_sensor_state_changed(sensor, state):
     logger.debug('Sensor {0} is {1}'.format(sensor.Name, state))
 
@@ -111,5 +92,27 @@ gl_scanner.start()
 
 def get_head_band_sensor_object():
     return gl_sensor
+
+
+
+
+"""
+#doing all this a the "module level" in "Demo" server mode it will work fine :)
+
+#for activation and access of the google sheets and python
+gc = gspread.service_account('370credentials.json')
+sh = gc.open_by_key('1Jwa2VL4aIiFerTGnpRbHw1DpKbLOHsojTJxU5n8mDaE')
+worksheet = sh.sheet1
+
+#holds values from the google sheets into variables 
+names = worksheet.col_values(2) #names holds an array with all the values in column 2 (names of users)
+print(names)
+
+#make pickle files for users in the google sheets
+filename = ""
+for i in names: 
+    filename = i + ".pkl"
+    print(filename)
+"""
 
 
